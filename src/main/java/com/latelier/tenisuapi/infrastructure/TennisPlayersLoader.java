@@ -1,5 +1,6 @@
 package com.latelier.tenisuapi.infrastructure;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.latelier.tenisuapi.domain.exception.NoPlayerFoundException;
@@ -11,6 +12,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
+import java.io.InputStream;
 import java.util.List;
 
 @Component
@@ -28,36 +30,37 @@ public class TennisPlayersLoader implements ApplicationRunner {
         this.jsonResource = jsonResource;
     }
 
-    /** Executed exactly once after the Spring context is created. */
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        JsonNode root = mapper.readTree(jsonResource.getInputStream());
-        JsonNode playersNode = root.get("players");
+        List<Player> loaded;
+        try (InputStream in = jsonResource.getInputStream()) {
 
-        /* ----------- STRUCTURAL VALIDATION (fail fast) ----------- */
-        if (playersNode == null || !playersNode.isArray() || playersNode.isEmpty()) {
-            throw new IllegalStateException("""
-                    Invalid JSON structure: the 'players' array is missing or empty
-                    → File: %s
-                    """.formatted(jsonResource.getFilename()));
+            JsonNode root        = mapper.readTree(in);
+            JsonNode playersNode = root.path("players");
+
+            /* ----------- VALIDATION STRUCTURE ----------- */
+            if (!playersNode.isArray() || playersNode.isEmpty()) {
+                throw new IllegalStateException(
+                        "Invalid JSON: array 'players' is missing or empty in %s"
+                                .formatted(jsonResource.getFilename()));
+            }
+
+            /* ----------- CONVERSION ----------- */
+            loaded = mapper.convertValue(
+                    playersNode,
+                    new TypeReference<List<Player>>() {}
+            );
         }
 
-        /* ----------- DATA CONVERSION ----------- */
-        players = List.copyOf(
-                JsonPlayerConverter.fromJsonPlayersToJava(jsonResource.getFile())
-        );
-
-        /* ----------- CONTENT VALIDATION (optional safety net) ----------- */
-        if (players.isEmpty()) {
-            log.error("""
-                    JSON → Player conversion produced 0 players.
-                    Please check the content of %s
-                    """.formatted(jsonResource.getFilename()));
-
+        /* ----------- VALIDATION CONTENU ----------- */
+        if (loaded.isEmpty()) {
+            log.error("JSON → Player conversion produced 0 players (file: {})",
+                    jsonResource.getFilename());
             throw new NoPlayerFoundException();
         }
 
+        players = List.copyOf(loaded);        // copie immuable en mémoire
         log.info("Loaded {} players from {}", players.size(), jsonResource.getFilename());
     }
 

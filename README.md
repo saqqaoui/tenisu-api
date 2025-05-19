@@ -196,3 +196,27 @@ The API will be available at **[http://localhost:5000](http://localhost:5000)**.
 2. **Median by country** – `/api/stats/height/median/{countryCode}` returns the median height for the players of a given country.
 
 ---
+
+
+
+## Swagger in Production
+
+The application is hosted on AWS Elastic Beanstalk in the EU?West?1 region.You can explore the live API via Swagger using the links below:
+
+#cResource URL
+
+Swagger UI
+
+http://tenisulatelier.eu-west-1.elasticbeanstalk.com/swagger-ui/index.html
+
+OpenAPI?3 JSON
+
+http://tenisulatelier.eu-west-1.elasticbeanstalk.com/v3/api-docs
+
+What you can do
+
+- Discover every route: parameters, request/response bodies, status codes.
+
+- Try live calls directly from the browser—ideal for quick QA checks.
+
+- Generate client code (via Swagger?Codegen/Swagger?Editor) using the exposed OpenAPI spec.
