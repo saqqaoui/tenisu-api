@@ -1,0 +1,64 @@
+{
+  "players": [
+    {
+      "id": 1,
+      "firstname": "Player-A",
+      "lastname": "Anon",
+      "shortname": "P.ANO",
+      "sex": "F",
+      "country": {
+        "picture": "picture",
+        "code": "USA"
+      },
+      "picture": "picture",
+      "data": {
+        "rank": 4,
+        "points": 6450,
+        "weight": 64000,
+        "height": 175,
+        "age": 20,
+        "last": [1, 0, 1, 1, 1]
+      }
+    },
+    {
+      "id": 2,
+      "firstname": "Player-B",
+      "lastname": "Anon",
+      "shortname": "P.BNO",
+      "sex": "F",
+      "country": {
+        "picture": "picture",
+        "code": "SRB"
+      },
+      "picture": "picture",
+      "data": {
+        "rank": 4,
+        "points": 6450,
+        "weight": 64000,
+        "height": 175,
+        "age": 20,
+        "last": [1, 0, 1, 1, 1]
+      }
+    },
+    {
+      "id": 3,
+      "firstname": "Player-C",
+      "lastname": "Anon",
+      "shortname": "P.CNO",
+      "sex": "F",
+      "country": {
+        "picture": "picture",
+        "code": "SUI"
+      },
+      "picture": "picture",
+      "data": {
+        "rank": 9,
+        "points": 3910,
+        "weight": 66000,
+        "height": 167,
+        "age": 30,
+        "last": [0, 1, 1, 0, 1]
+      }
+    }
+  ]
+}
